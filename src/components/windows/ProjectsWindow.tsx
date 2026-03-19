@@ -9,7 +9,7 @@ export default function ProjectsWindow() {
     <div className="flex w-full h-[500px] text-os-text font-mono">
       
       {/* File Tree Sidebar */}
-      <div className="w-[35%] border-r border-os-border bg-os-window/40 p-4">
+      <div className="w-[35%] border-r border-os-border bg-os-bg p-4">
         <div className="text-xs text-os-muted mb-4 uppercase tracking-widest pl-2">📁 projects/</div>
         <div className="flex flex-col gap-1">
           {saadData.projects.map((proj, i) => (

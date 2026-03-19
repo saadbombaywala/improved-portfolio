@@ -23,7 +23,7 @@ export default function AboutWindow() {
     <div className="flex flex-col md:flex-row w-full h-full text-os-text font-mono">
       
       {/* Left Sidebar */}
-      <div className="w-full md:w-[30%] bg-white/5 border-b md:border-b-0 md:border-r border-os-border p-6 flex flex-col items-center text-center">
+      <div className="w-full md:w-[30%] bg-os-bg border-b md:border-b-0 md:border-r border-os-border p-6 flex flex-col items-center text-center">
         
         {/* Avatar Ring */}
         <div className="relative w-28 h-28 mb-6 flex items-center justify-center">

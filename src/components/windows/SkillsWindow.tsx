@@ -43,7 +43,7 @@ export default function SkillsWindow() {
   return (
     <div className="w-full h-full bg-os-window text-os-text font-mono text-sm p-4 overflow-x-auto custom-scrollbar">
       {/* Header */}
-      <div className="border border-os-border p-3 mb-4 bg-os-window/50 relative">
+      <div className="border border-os-border p-3 mb-4 bg-os-bg relative">
         <h2 className="text-white font-bold leading-tight">B.E.A.T SKILL ACQUISITION MONITOR v1.0</h2>
         <p className="text-os-muted text-xs mt-1">Monitoring 6 active learning processes...</p>
       </div>
@@ -102,7 +102,7 @@ export default function SkillsWindow() {
       </div>
 
       {/* Footer Notes */}
-      <div className="mt-8 border border-os-border p-4 bg-os-bg/30 min-w-[500px]">
+      <div className="mt-8 border border-os-border p-4 bg-os-bg min-w-[500px]">
         <div className="text-os-accent font-bold mb-2">SYSTEM NOTES</div>
         <ul className="text-xs text-os-muted space-y-1">
           <li>&gt; All processes running in LEARNING MODE</li>

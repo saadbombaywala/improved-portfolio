@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import type { ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { useWindowStore } from '../../store/windowStore';
 import { playClickSound } from '../../utils/audio';
 
@@ -17,6 +17,7 @@ interface WindowProps {
 export default function Window({ id, title, children, defaultWidth = 700, defaultHeight = 500, initialX, initialY }: WindowProps) {
   const { windows, closeWindow, minimizeWindow, maximizeWindow, focusWindow, activeId } = useWindowStore();
   const win = windows.find(w => w.id === id);
+  const dragControls = useDragControls();
   const dragConstraintsRef = useRef(null);
   
   if (!win) return null;
@@ -24,13 +25,16 @@ export default function Window({ id, title, children, defaultWidth = 700, defaul
   const isActive = activeId === id;
   const isMaximized = win.isMaximized;
 
+  // Stagger windows so they don't pile on top of each other
+  const windowIndex = windows.findIndex(w => w.id === id);
+  const staggerOffset = windowIndex * 30;
+  const calcX = initialX ?? (window.innerWidth / 2 - defaultWidth / 2 + staggerOffset);
+  const calcY = initialY ?? (window.innerHeight / 2 - defaultHeight / 2 + staggerOffset);
+
   const handleDragEnd = (_e: any, info: any) => {
-    // Window snap behavior
     if (info.point.y < 20) {
       if (!isMaximized) maximizeWindow(id);
     } 
-    // We could add left/right snapping here by calculating info.point.x against window.innerWidth
-    // but standard maximizing covers the core requirement safely without complex width recalculations.
   };
 
   return (
@@ -38,7 +42,7 @@ export default function Window({ id, title, children, defaultWidth = 700, defaul
       {!win.isMinimized && (
         <motion.div
           ref={dragConstraintsRef}
-          initial={{ opacity: 0, scale: 0.95, x: initialX || (window.innerWidth / 2 - defaultWidth / 2), y: initialY || (window.innerHeight / 2 - defaultHeight / 2) }}
+          initial={{ opacity: 0, scale: 0.95, x: calcX, y: calcY }}
           animate={
             isMaximized 
               ? { opacity: 1, scale: 1, x: 0, y: 0, width: '100vw', height: 'calc(100vh - 48px)' } 
@@ -52,21 +56,23 @@ export default function Window({ id, title, children, defaultWidth = 700, defaul
           `}
           onClick={() => focusWindow(id)}
           drag={!isMaximized}
+          dragControls={dragControls}
           dragMomentum={false}
-          dragListener={false} // We apply listener only to titlebar
+          dragListener={false}
           onDragEnd={handleDragEnd}
         >
-          {/* Title Bar - Draggable */}
+          {/* Title Bar - Draggable via dragControls */}
           <div 
-            className={`h-9 flex items-center justify-between px-3 select-none no-drag cursor-move border-b 
+            className={`h-9 flex items-center justify-between px-3 select-none cursor-move border-b 
               ${isActive ? 'bg-gradient-to-r from-os-window-title to-os-accent/20 border-os-accent' : 'bg-os-window-title border-os-border'}
             `}
-            onPointerDown={() => {
+            onPointerDown={(e) => {
               focusWindow(id);
-              // Start dragging using framer motion private api bypass or standard drag controls
+              if (!isMaximized) {
+                dragControls.start(e);
+              }
             }}
             onDoubleClick={() => maximizeWindow(id)}
-            style={{ WebkitAppRegion: 'drag' } as any} // Desktop app drag trick, mapped to framer-motion dragControls ideally
           >
             <div className="flex items-center gap-2 pointer-events-none">
               <span className="font-mono text-xs text-white uppercase tracking-widest truncate max-w-[40vw]">
