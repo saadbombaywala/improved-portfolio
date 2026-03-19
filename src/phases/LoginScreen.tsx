@@ -3,7 +3,7 @@ import { useSystemStore } from '../store/systemStore';
 import { useWindowStore } from '../store/windowStore';
 import Wallpaper from '../components/os/Wallpaper';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClickSound, playBootSound } from '../utils/audio';
+import { playBootSound } from '../utils/audio';
 
 export default function LoginScreen() {
   const setPhase = useSystemStore((state: any) => state.setPhase);
